@@ -57,6 +57,10 @@ Ce projet, développé dans le cadre du MSPR de l'EPSI (B3 DevIA, spécialité d
 
 Le fichier `requirements.txt` contient toutes les dépendances Python nécessaires pour le lancement du frontend. Pensez à l'installer (voir étape 1 de la méthode development). Docker gère les dépendances pour le déploiement conteneurisé.
 
+## 🧪 Tests
+
+Pour lancer les tests, exécutez `pytest` à la racine du projet.
+
 ## 🔗 Liens Utiles
 
 *   **Backend:** [github.com/bahailime/wildlens](https://github.com/bahailime/wildlens)
