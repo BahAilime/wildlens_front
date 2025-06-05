@@ -47,7 +47,7 @@ jobs:
       - name: Install bandit
         run: pip install bandit
       - name: Run bandit scan
-        run: bandit -r . -x tests
+        run: bandit -r . -x ./tests
 
   dependency_scan:
     runs-on: ubuntu-latest
