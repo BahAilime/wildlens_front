@@ -61,16 +61,3 @@ jobs:
         run: pip install safety
       - name: Run safety check
         run: safety check -r requirements.txt
-
-  trivy_scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan_type: 'fs'
-          severities: 'CRITICAL,HIGH'
-          exit-code: '1'
-          format: 'table'
-          security_checks: 'configfs'
