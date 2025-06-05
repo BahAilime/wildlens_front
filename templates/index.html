@@ -146,10 +146,23 @@
                 margin-bottom: 20px;
             }
         }
+
+        .skip-link {
+            top: -1000px;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+
+        #uploadPlaceholder:focus {
+            outline: 2px solid #007bff; /* Or your theme's primary color */
+            outline-offset: 2px; /* Adjust as needed for visual appeal */
+        }
     </style>
 </head>
 
 <body>
+    <a class="skip-link" href="#detect" style="position: absolute; left: 0; background-color: #035c3b; color: white; padding: 8px; z-index: 2000; text-decoration: none; border-radius: 0 0 5px 5px;">Aller au contenu principal</a>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
@@ -253,7 +266,7 @@
                             <h5 class="card-title mb-3">Téléchargez votre image</h5>
                             <div class="upload-area" id="uploadArea">
                                 <input type="file" id="imageUpload" accept="image/*" hidden>
-                                <div id="uploadPlaceholder">
+                                <div id="uploadPlaceholder" tabindex="0">
                                     <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-muted"></i>
                                     <p class="mb-0">Cliquez ou glissez-déposez votre image ici</p>
                                     <p class="small text-muted">Formats acceptés: JPG, PNG</p>
@@ -263,14 +276,14 @@
                                     <button class="btn btn-sm btn-outline-danger" id="removeImage">Supprimer</button>
                                 </div>
                             </div>
-                            <div class="mt-3">
+                            <!-- <div class="mt-3">
                                 <button class="btn btn-outline-primary me-2" id="captureButton">
                                     <i class="fas fa-camera me-1"></i> Prendre une photo
                                 </button>
                                 <button class="btn btn-outline-secondary" id="galleryButton">
                                     <i class="fas fa-images me-1"></i> Choisir un exemple
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -583,6 +596,13 @@
 
     <!-- Scripts -->
     <script>
+        document.getElementById('uploadPlaceholder').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                document.getElementById('imageUpload').click();
+            }
+        });
+
         function convertDMSToDecimal(dms, ref) {
             if (!Array.isArray(dms)) return null;
             const [deg, min, sec] = dms;
@@ -679,7 +699,6 @@
             const uploadPlaceholder = document.getElementById('uploadPlaceholder');
             const removeImage = document.getElementById('removeImage');
             const detectButton = document.getElementById('detectButton');
-            const regionSelect = document.getElementById('regionSelect');
 
             // Results section
             const loadingSpinner = document.getElementById('loadingSpinner');
@@ -723,21 +742,16 @@
                 checkFormValidity();
             });
 
-            // Region select handler
-            regionSelect.addEventListener('change', function () {
-                checkFormValidity();
-            });
-
             // Check if form is valid
             function checkFormValidity() {
-                if (imagePreviewContainer.style.display === 'block' &&
-                    (regionSelect.value !== null && regionSelect.value !== 'Choisissez une région')) {
+                
+                if (imagePreviewContainer.style.display === 'block') {
                     detectButton.disabled = false;
                 } else {
-                    detectButton.disabled = false;
+                    detectButton.disabled = true;
                 }
             }
-
+            
             // Detect button handler
             detectButton.addEventListener('click', function () {
                 // Show loading spinner
