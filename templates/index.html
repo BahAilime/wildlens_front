@@ -150,25 +150,31 @@
         .skip-link {
             top: -1000px;
         }
+
         .skip-link:focus {
             top: 0;
         }
 
         #uploadPlaceholder:focus {
-            outline: 2px solid #007bff; /* Or your theme's primary color */
-            outline-offset: 2px; /* Adjust as needed for visual appeal */
+            outline: 2px solid #007bff;
+            /* Or your theme's primary color */
+            outline-offset: 2px;
+            /* Adjust as needed for visual appeal */
         }
     </style>
 </head>
 
 <body>
-    <a class="skip-link" href="#detect" style="position: absolute; left: 0; background-color: #035c3b; color: white; padding: 8px; z-index: 2000; text-decoration: none; border-radius: 0 0 5px 5px;">Aller au contenu principal</a>
+    <a class="skip-link" href="#detect"
+        style="position: absolute; left: 0; background-color: #035c3b; color: white; padding: 8px; z-index: 2000; text-decoration: none; border-radius: 0 0 5px 5px;">Aller
+        au contenu principal</a>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <a class="navbar-brand" href="#">
-                    <img src="{{ url_for('static', filename='wildaware-high-resolution-color-logo-crop.png') }}" alt="WildLens Logo" height="30" class="d-inline-block align-top me-2">
+                    <img src="{{ url_for('static', filename='wildaware-high-resolution-color-logo-crop.png') }}"
+                        alt="WildLens Logo" height="30" class="d-inline-block align-top me-2">
                 </a>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -460,8 +466,8 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <div class="card feature-card">
-                        <img src="{{ url_for('static', filename='animauxdemo/raccoon.jpg') }}"
-                            class="card-img-top" alt="Empreinte de Raton Laveur">
+                        <img src="{{ url_for('static', filename='animauxdemo/raccoon.jpg') }}" class="card-img-top"
+                            alt="Empreinte de Raton Laveur">
                         <div class="card-body">
                             <h5 class="card-title">Raton Laveur</h5>
                             <p class="card-text">Empreinte caractéristique de raton laveur</p>
@@ -484,7 +490,8 @@
             </div>
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <img src="{{ url_for('static', filename='creepeople.png') }}" alt="Utilisateurs de wildlens en forêt" class="w-100">
+                    <img src="{{ url_for('static', filename='creepeople.png') }}"
+                        alt="Utilisateurs de wildlens en forêt" class="w-100">
                 </div>
                 <div class="col-lg-6">
                     <h3>Notre mission</h3>
@@ -515,7 +522,8 @@
             <div class="row">
                 <div class="col-lg-4 mb-4 mb-lg-0">
                     <a class="navbar-brand" href="#">
-                        <img src="{{ url_for('static', filename='wildaware-high-resolution-color-logo-crop.png') }}" alt="WildLens Logo" height="30" class="d-inline-block align-top me-2">
+                        <img src="{{ url_for('static', filename='wildaware-high-resolution-color-logo-crop.png') }}"
+                            alt="WildLens Logo" height="30" class="d-inline-block align-top me-2">
                     </a>
                     <p>Sensibiliser à la préservation de la faune sauvage grâce à la technologie</p>
                     <div class="social-icons">
@@ -595,101 +603,16 @@
     </div>
 
     <!-- Scripts -->
+    <script src="{{ url_for('static', filename='functions.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('uploadPlaceholder').addEventListener('keydown', function(event) {
+        document.getElementById('uploadPlaceholder').addEventListener('keydown', function (event) {
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
                 document.getElementById('imageUpload').click();
             }
         });
-
-        function convertDMSToDecimal(dms, ref) {
-            if (!Array.isArray(dms)) return null;
-            const [deg, min, sec] = dms;
-            let decimal = deg + min / 60 + sec / 3600;
-            if (ref === 'S' || ref === 'W') decimal *= -1;
-            return decimal;
-        }
-
-        function extractCoordinates(exifData) {
-            let lat = null;
-            let lon = null;
-
-            // Latitude
-            if (exifData.GPSLatitude && exifData.GPSLatitudeRef) {
-                lat = convertDMSToDecimal(exifData.GPSLatitude, exifData.GPSLatitudeRef);
-            } else if (exifData.Latitude && exifData.LatitudeRef) {
-                lat = convertDMSToDecimal(exifData.Latitude, exifData.LatitudeRef);
-            } else if (exifData.lat || exifData.latitude || exifData.Lat) {
-                lat = exifData.lat || exifData.latitude || exifData.Lat;
-            }
-
-            // Longitude
-            if (exifData.GPSLongitude && exifData.GPSLongitudeRef) {
-                lon = convertDMSToDecimal(exifData.GPSLongitude, exifData.GPSLongitudeRef);
-            } else if (exifData.Longitude && exifData.LongitudeRef) {
-                lon = convertDMSToDecimal(exifData.Longitude, exifData.LongitudeRef);
-            } else if (exifData.lon || exifData.longitude || exifData.Lng || exifData.Long) {
-                lon = exifData.lon || exifData.longitude || exifData.Lng || exifData.Long;
-            }
-
-            // Alternative string format genre "Location": "43.467448, 11.885126"
-            if ((!lat || !lon) && exifData.Location) {
-                const match = exifData.Location.match(/(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)/);
-                if (match) {
-                    lat = parseFloat(match[1]);
-                    lon = parseFloat(match[3]);
-                }
-            }
-
-            if (lat !== null && lon !== null) {
-                return { latitude: lat, longitude: lon };
-            } else {
-                return { latitude: -1, longitude: -1 };
-            }
-        }
-        function extractExifDate(exifData) {
-            const dateFields = [
-                'DateTimeOriginal',
-                'DateTimeDigitized',
-                'DateTime',
-                'CreateDate',
-                'CreationDate',
-                'ModifyDate'
-            ];
-
-            for (const field of dateFields) {
-                if (exifData[field]) {
-                    return formatExifDate(exifData[field]);
-                }
-            }
-            const date = new Date();
-            return date.toISOString();
-        }
-
-        function formatExifDate(rawDate) {
-            // Exemple EXIF : "2023:07:14 10:45:30"
-            if (typeof rawDate === 'string') {
-                const parts = rawDate.split(' ');
-                const datePart = parts[0].replace(/:/g, '-');
-                const timePart = parts[1];
-                const formattedDate = `${datePart}T${timePart}`;
-                const isoString = formattedDate.length >= 19 ? formattedDate : formattedDate + ':00Z';
-                return new Date(isoString);
-            }
-
-            // Si c’est déjà un objet Date ou timestamp numérique
-            if (rawDate instanceof Date) return rawDate;
-            if (typeof rawDate === 'number') return new Date(rawDate);
-
-            return null;
-        }
-
-
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Upload area functionality
             const uploadArea = document.getElementById('uploadArea');
@@ -744,14 +667,14 @@
 
             // Check if form is valid
             function checkFormValidity() {
-                
+
                 if (imagePreviewContainer.style.display === 'block') {
                     detectButton.disabled = false;
                 } else {
                     detectButton.disabled = true;
                 }
             }
-            
+
             // Detect button handler
             detectButton.addEventListener('click', function () {
                 // Show loading spinner
@@ -766,7 +689,7 @@
                 EXIF.getData(imagePreview, function () {
                     exif = EXIF.getAllTags(this);
                     coo = extractCoordinates(exif)
-                    date: date = extractExifDate(exif) === true ? extractExifDate(exif): new Date();
+                    date: date = extractExifDate(exif) === true ? extractExifDate(exif) : new Date();
 
                 });
                 formData.append('coordinates', JSON.stringify(coo));
