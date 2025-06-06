@@ -6,9 +6,11 @@ module.exports = { convertDMSToDecimal, extractExifDate, extractCoordinates, for
  * @param {Array<number>} dms Tableau [degr s, minutes, secondes]
  * @param {String} ref Référence (N, S, E, W)
  * @returns {number} Latitude/longitude en décimale
+ * @throws {TypeError} Si l'argument dms n'est pas un tableau ou si l'argument ref n'est pas une chaîne de caractères.
  */
 function convertDMSToDecimal(dms, ref) {
-    if (!Array.isArray(dms)) return null;
+    if (!Array.isArray(dms)) throw new TypeError("Invalid input type for convertDMSToDecimal. dms must be an array.");
+    if (typeof ref !== 'string') throw new TypeError("Invalid input type for convertDMSToDecimal. ref must be a string.");
     const [deg, min, sec] = dms;
     let decimal = deg + min / 60 + sec / 3600;
     if (ref === 'S' || ref === 'W') decimal *= -1;
