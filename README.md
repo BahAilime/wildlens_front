@@ -61,6 +61,8 @@ Le fichier `requirements.txt` contient toutes les dépendances Python nécessair
 
 Pour lancer les tests, exécutez `pytest` à la racine du projet.
 
+Pour lancer les tests avec le coverage, exécutez `pytest --cov-report xml:cov.xml --cov .` à la racine du projet.
+
 ## 🔗 Liens Utiles
 
 *   **Backend:** [github.com/bahailime/wildlens](https://github.com/bahailime/wildlens)
