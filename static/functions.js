@@ -21,9 +21,13 @@ function convertDMSToDecimal(dms, ref) {
  * DateTimeOriginal, puis DateTimeDigitized, etc.
  * Si aucune date n'est trouvée, renvoie la date actuelle.
  * @param {Object} exifData Données EXIF
- * @returns {String} Date en format ISO (YYYY-MM-DDTHH:MM:SSZ)
+ * @returns {Date}
  */
 function extractExifDate(exifData) {
+    if (typeof exifData !== 'object' || exifData === null) {
+        throw new TypeError("Invalid input type for extractExifDate. Expected an object.");
+    }
+
     const dateFields = [
         'DateTimeOriginal',
         'DateTimeDigitized',
@@ -38,13 +42,13 @@ function extractExifDate(exifData) {
             return formatExifDate(exifData[field]);
         }
     }
-    const date = new Date();
-    return date.toISOString();
+
+    return new Date();
 }
 
 /**
  * Convertit une date au format EXIF en un objet Date.
- * @param {String|Date|Number} rawDate Date brute au format EXIF ("2023:07:14 10:45:30")
+ * @param {String|Number} rawDate Date brute au format EXIF ("2023:07:14 10:45:30")
  * @returns {Date} Objet Date correspondant, ou null si la conversion a échouée
  * @throws {TypeError} Si l'argument n'est pas de type string ou number
  */
