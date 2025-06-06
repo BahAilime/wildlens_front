@@ -29,10 +29,5 @@ def scan():
     return render_template("scan.html")
 
 
-@app.route("/base")
-def base():
-    return render_template("base.html")  # usually not directly rendered
-
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
