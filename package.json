@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "jest --verbose",
-    "test2": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test:cov": "jest --coverage --verbose"
   },
   "devDependencies": {
     "jest": "^29.7.0"
