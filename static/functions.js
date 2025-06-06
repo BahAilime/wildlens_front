@@ -1,3 +1,5 @@
+module.exports = { convertDMSToDecimal, extractExifDate, extractCoordinates, formatExifDate };
+
 /**
  * Convertit un tableau [degrés, minutes, secondes] en une latitude/longitude décimale.
  * Si le référence (ref) est 'S' (Sud) ou 'W' (Ouest), la valeur retournée sera n gative.
@@ -43,10 +45,15 @@ function extractExifDate(exifData) {
 /**
  * Convertit une date au format EXIF en un objet Date.
  * @param {String|Date|Number} rawDate Date brute au format EXIF ("2023:07:14 10:45:30")
- * @returns {Date|null} Objet Date correspondant, ou null si la conversion a échouée
+ * @returns {Date} Objet Date correspondant, ou null si la conversion a échouée
+ * @throws {TypeError} Si l'argument n'est pas de type string ou number
  */
 function formatExifDate(rawDate) {
     // Exemple EXIF : "2023:07:14 10:45:30"
+    if (typeof rawDate !== "string" && typeof rawDate !== "number") {
+        throw new TypeError("Invalid input type for formatExifDate. Expected string or number.");
+      }
+
     if (typeof rawDate === 'string') {
         const parts = rawDate.split(' ');
         const datePart = parts[0].replace(/:/g, '-');
@@ -54,12 +61,9 @@ function formatExifDate(rawDate) {
         const formattedDate = `${datePart}T${timePart}`;
         const isoString = formattedDate.length >= 19 ? formattedDate : formattedDate + ':00Z';
         return new Date(isoString);
+    } else if (typeof rawDate === 'number') {
+        return new Date(rawDate)
     }
-
-    if (rawDate instanceof Date) return rawDate;
-    if (typeof rawDate === 'number') return new Date(rawDate);
-
-    return null;
 }
 
 /**
